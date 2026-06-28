@@ -1,5 +1,6 @@
 import tkinter as tk
 from core.storage import load_passwords
+from ui.create_dialog import CreateDialog
 
 class MainWindow(tk.Tk):
     def __init__(self):
@@ -11,10 +12,10 @@ class MainWindow(tk.Tk):
         self._render_passwords()
 
     def _create_top(self):
-        frame_topo = tk.Frame(self, bg="white", pady=10)
-        frame_topo.pack(fill="x")
+        self.frame_top = tk.Frame(self, bg="white", pady=10)
+        self.frame_top.pack(fill="x")
 
-        btn_create = tk.Button(frame_topo, text="CREATE PASSWORD")
+        btn_create = tk.Button(self.frame_top, text="CREATE PASSWORD", command=self._open_create_dialog)
         btn_create.pack(padx=10)
     
     def _create_body(self):
@@ -40,3 +41,6 @@ class MainWindow(tk.Tk):
             tk.Label(frame_entry, text=password["site"], bg="white", font=("Arial", 10, "bold")).pack(anchor="w")
             tk.Label(frame_entry, text=f"login: {password['login']}", bg="white").pack(anchor="w")
             tk.Label(frame_entry, text=f"password: {'•' * 8}", bg="white").pack(anchor="w")
+    
+    def _open_create_dialog(self):
+        CreateDialog(self)

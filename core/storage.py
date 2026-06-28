@@ -1,7 +1,8 @@
 import json
 import os
 
-FILE = "password_manager/data/passwords.json"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FILE = os.path.join(BASE_DIR, "data", "passwords.json")
 
 def load_passwords():
     if not os.path.exists(FILE):
@@ -10,7 +11,7 @@ def load_passwords():
         return json.load(f)
 
 def save_passwords(passwords):
-    os.makedirs("data", exist_ok=True)
+    os.makedirs(os.path.dirname(FILE), exist_ok=True)
 
     with open(FILE, "w") as f:
         json.dump(passwords, f, indent=4)

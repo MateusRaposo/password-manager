@@ -40,7 +40,14 @@ class MainWindow(tk.Tk):
 
             tk.Label(frame_entry, text=password["site"], bg="white", font=("Arial", 10, "bold")).pack(anchor="w")
             tk.Label(frame_entry, text=f"login: {password['login']}", bg="white").pack(anchor="w")
-            tk.Label(frame_entry, text=f"password: {'•' * 8}", bg="white").pack(anchor="w")
+            frame_password = tk.Frame(frame_entry, bg="white")
+            frame_password.pack(fill="x", anchor="w")
+            tk.Label(frame_password, text=f"password: {'•' * 8}", bg="white").pack(side="left")
+            tk.Button(frame_password, text="COPY", command=lambda p=password["senha"]: self._copy_password(p)).pack(side="left", padx=5)
     
     def _open_create_dialog(self):
         CreateDialog(self)
+    
+    def _copy_password(self, password):
+        self.clipboard_clear()
+        self.clipboard_append(password)

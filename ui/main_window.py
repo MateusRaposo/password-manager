@@ -1,6 +1,7 @@
 import tkinter as tk
 from core.storage import load_passwords
 from ui.create_dialog import CreateDialog
+from core.storage import load_passwords, save_passwords
 
 class MainWindow(tk.Tk):
     def __init__(self):
@@ -34,7 +35,7 @@ class MainWindow(tk.Tk):
 
         passwords = load_passwords()
 
-        for password in passwords:
+        for index, password in enumerate(passwords):
             frame_entry = tk.Frame(self.frame_body, bg="white")
             frame_entry.pack(fill="x", padx=10, pady=5)
 
@@ -44,10 +45,17 @@ class MainWindow(tk.Tk):
             frame_password.pack(fill="x", anchor="w")
             tk.Label(frame_password, text=f"password: {'•' * 8}", bg="white").pack(side="left")
             tk.Button(frame_password, text="COPY", command=lambda p=password["senha"]: self._copy_password(p)).pack(side="left", padx=5)
-    
+            tk.Button(frame_password, text="DELETE", command=lambda i=index: self._delete_password(i)).pack(side="left", padx=5)
+
     def _open_create_dialog(self):
         CreateDialog(self)
     
     def _copy_password(self, password):
         self.clipboard_clear()
         self.clipboard_append(password)
+
+    def _delete_password(self, index):
+        passwords = load_passwords()
+        passwords.pop(index)
+        save_passwords(passwords)
+        self._render_passwords()

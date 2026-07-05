@@ -21,12 +21,20 @@ class MainWindow(tk.Tk):
         btn_create.pack(padx=10)
     
     def _create_body(self):
-        self.frame_body = tk.Frame(self, bg="white")
-        self.frame_body.pack(fill="both", expand=True)
-
-        label_title = tk.Label(self.frame_body, text="YOUR PASSWORDS", bg="white", anchor="w")
-        label_title.pack(fill="x", padx=10, pady=10)
-
+        self.canvas = tk.Canvas(self, bg="white")
+        self.scrollbar = tk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
+        
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+        
+        self.scrollbar.pack(side="right", fill="y")
+        self.canvas.pack(side="left", fill="both", expand=True)
+        
+        self.frame_body = tk.Frame(self.canvas, bg="white")
+        self.canvas_window = self.canvas.create_window((0, 0), window=self.frame_body, anchor="nw")
+        
+        self.frame_body.bind("<Configure>", self._on_frame_configure)
+        self.canvas.bind("<Configure>", self._on_canvas_configure)
+        
     def _render_passwords(self):
         for widget in self.frame_body.winfo_children():
             widget.destroy()
@@ -64,3 +72,9 @@ class MainWindow(tk.Tk):
     
     def _open_edit_dialog(self, index, password):
         EditDialog(self, index, password)
+    
+    def _on_frame_configure(self, event):
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
+    def _on_canvas_configure(self, event):
+        self.canvas.itemconfig(self.canvas_window, width=event.width)
